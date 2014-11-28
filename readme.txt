@@ -1,7 +1,7 @@
-=== WooCommerce - Product Restrictions ===
+=== WooCommerce Product Restrictions ===
 Contributors: jamescollins
-Requires at least: 3.4
-Tested up to: 3.5
+Requires at least: 3.9
+Tested up to: 4.0
 Stable tag: 1.0
 
 Implement mixed dozens using WooCommerce
@@ -10,7 +10,7 @@ Implement mixed dozens using WooCommerce
 
 Implement mixed dozens using WooCommerce.
 
-﻿- Adds new "Product Groups" setting to Dashboard, WooCommerce, Settings, Catalog.
+﻿- Adds new "Product Groups" setting to Dashboard, WooCommerce, Settings, Products.
 
 - Adds new "Product Groups" setting to Dashboard, Products, Attributes, Configure Terms, Edit.
 
@@ -19,6 +19,8 @@ Implement mixed dozens using WooCommerce.
 ﻿Example usage:
 
 Install & activate plugin.
+
+dashboard, WooCommerce, Settings, Products, Product Groups. Configure checkout message.
 
 Dashboard, Products, Attributes:
 - Add new attribute called "Pricing"

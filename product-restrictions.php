@@ -1,15 +1,17 @@
 <?php
 /*
-Plugin Name: WooCommerce - Product Restrictions
-Plugin URI: http://www.woothemes.com/woocommerce
+Plugin Name: WooCommerce Product Restrictions
+Plugin URI: https://github.com/OM4/woocommerce-product-restrictions/
 Description: Implement mixed dozens using WooCommerce
-Version: 0.1
+Version: 1.0-dev
 Author: OM4
 Author URI: http://om4.com.au/
+Git URI: https://github.com/OM4/woocommerce-product-restrictions
+Git Branch: release
 */
 
 /*
-Copyright 2012 OM4 (email: info@om4.com.au    web: http://om4.com.au/)
+Copyright 2012-2014 OM4 (email: info@om4.com.au    web: http://om4.com.au/)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,11 +28,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-load_plugin_textdomain( 'wcvariationrestrictions', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
+load_plugin_textdomain( 'woocommerce-product-restrictions', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
 
 function init_woocommerce_variation_restrictions() {
 
-	if ( ! class_exists( 'Woocommerce' ) ) {
+	if ( ! class_exists( 'WooCommerce' ) ) {
 		return;
 	}
 
@@ -56,8 +58,6 @@ function init_woocommerce_variation_restrictions() {
 		 */
 		public function __construct() {
 
-			global $woocommerce;
-
 			if ( is_admin() ) {
 				require_once( 'includes/WC_Variation_Restrictions_Admin.php' );
 				$this->admin = new WC_Variation_Restrictions_Admin( $this );
@@ -65,7 +65,7 @@ function init_woocommerce_variation_restrictions() {
 
 			add_action( 'woocommerce_check_cart_items', array( $this, 'CheckCart' ) );
 
-			$this->default_message = __( 'The following product(s) must be ordered in groups of %mod%. Please add another %gap% eligible product(s) to continue. %productlist%', 'wcvariationrestrictions' );
+			$this->default_message = __( 'The following product(s) must be ordered in groups of %mod%. Please add another %gap% eligible product(s) to continue. %productlist%', 'woocommerce-product-restrictions' );
 
 		}
 
@@ -145,11 +145,10 @@ function init_woocommerce_variation_restrictions() {
 		 * Executed during the 'woocommerce_check_cart_items' hook
 		 */
 		public function CheckCart() {
-			global $woocommerce, $wpdb;
 
 			$this->LoadRestrictions();
 
-			foreach ( $woocommerce->cart->get_cart() as $cart_item_id => $cart_item ) {
+			foreach ( WC()->cart->get_cart() as $cart_item_id => $cart_item ) {
 
 				if ( isset($cart_item['data']) && $cart_item['data'] instanceof WC_Product_Variation && is_array( $cart_item['variation'] ) ) {
 
@@ -192,20 +191,20 @@ function init_woocommerce_variation_restrictions() {
 					foreach ( array_keys($data['products']) as $product_id ) {
 
 						// get_product() exists in WooCommerce 2.0+ only
-						$product = function_exists('get_product') ? get_product($product_id) : new WC_Product( $product_id );
+						$product = wc_get_product( $product_id );
 
 						$product_name = '';
 						$variation_info = '';
 
-						foreach ( $woocommerce->cart->get_cart() as $cart_item ) {
+						foreach ( WC()->cart->get_cart() as $cart_item ) {
 							if ( $cart_item['product_id'] == $product_id ) {
 								$product_name = $product->get_title();
-								$variation_info = $woocommerce->cart->get_item_data( $cart_item, true );
+								$variation_info = WC()->cart->get_item_data( $cart_item, true );
 								break;
 							}
 						}
 
-						$productlist .= '<li>' . sprintf( __( '<a href="%1$s">%2$s</a> <small>%3$s</small>', 'wcvariationrestrictions' ), get_permalink($product_id), $product_name, $variation_info ) . '</li>';
+						$productlist .= '<li>' . sprintf( __( '<a href="%1$s">%2$s</a> <small>%3$s</small>', 'woocommerce-product-restrictions' ), get_permalink($product_id), $product_name, $variation_info ) . '</li>';
 
 					}
 
@@ -213,7 +212,7 @@ function init_woocommerce_variation_restrictions() {
 
 					$message = str_replace('%productlist%', $productlist, $message);
 
-					$woocommerce->add_error( $message );
+					wc_add_notice( $message, 'error' );
 
 					$this->can_checkout = false;
 
