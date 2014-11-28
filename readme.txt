@@ -4,7 +4,7 @@ Requires at least: 3.9
 Tested up to: 4.0
 Stable tag: 1.0
 
-Implement mixed dozens using WooCommerce
+Implement mixed dozens using WooCommerce.
 
 == Description ==
 

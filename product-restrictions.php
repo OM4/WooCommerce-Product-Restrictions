@@ -50,6 +50,8 @@ function init_woocommerce_variation_restrictions() {
 
 		private $product_variation_quantities = array();
 
+		private $cart_must_be_multiple_of;
+
 		private $can_checkout = true;
 
 
@@ -89,6 +91,8 @@ function init_woocommerce_variation_restrictions() {
 				}
 
 			}
+
+			$this->cart_must_be_multiple_of = intval ( get_option( 'woocommerce_cart_multiple_of', 0 ) );
 
 		}
 
@@ -147,6 +151,24 @@ function init_woocommerce_variation_restrictions() {
 		public function CheckCart() {
 
 			$this->LoadRestrictions();
+
+			if ( $this->cart_must_be_multiple_of > 0 ) {
+				// Entire cart contents must be a multiple of x. This takes precedence over all other product group rules
+				$modulus = WC()->cart->cart_contents_count % $this->cart_must_be_multiple_of;
+
+				if ( $modulus != 0 ) {
+
+					$message = $this->GetMultipleOfMessage();
+
+					$message = str_replace('%gap%', $this->cart_must_be_multiple_of - $modulus, $message);
+					$message = str_replace('%mod%', $this->cart_must_be_multiple_of, $message);
+					$message = str_replace('%productlist%', '', $message);
+					wc_add_notice( $message, 'error' );
+					$this->can_checkout = false;
+					return;
+
+				}
+			}
 
 			foreach ( WC()->cart->get_cart() as $cart_item_id => $cart_item ) {
 
@@ -218,6 +240,7 @@ function init_woocommerce_variation_restrictions() {
 
 				}
 			}
+
 		}
 
 	}

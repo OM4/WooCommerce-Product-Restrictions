@@ -44,6 +44,8 @@ class WC_Variation_Restrictions_Admin {
 	 */
 	public function Settings( $inventory_settings ) {
 
+		// TODO: add setting for entire cart contents multiple of setting
+
 		$inventory_settings[] = array(
 				'name' => __( 'Product Group(s)', 'woocommerce-product-restrictions' ), 'type' => 'title','desc' => __('You can use the product groups feature to force customers to purchase products in groups. This is typically used for mixed dozen wine cases.', 'woocommerce-product-restrictions'), 'id' => 'product_group_options'
 		);
