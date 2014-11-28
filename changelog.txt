@@ -1,0 +1,4 @@
+*** WooCommerce - Product Restrictions Changelog ***
+
+2013.01.14 - version 1.0
+ * Initial Release.
