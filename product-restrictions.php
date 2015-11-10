@@ -5,13 +5,13 @@ Plugin URI: https://github.com/OM4/woocommerce-product-restrictions/
 Description: Implement mixed dozens using WooCommerce
 Version: 1.0-dev
 Author: OM4
-Author URI: http://om4.com.au/
+Author URI: https://om4.com.au/plugins/
 Git URI: https://github.com/OM4/woocommerce-product-restrictions
 Git Branch: release
 */
 
 /*
-Copyright 2012-2014 OM4 (email: info@om4.com.au    web: http://om4.com.au/)
+Copyright 2012-2015 OM4 (email: info@om4.com.au    web: https://om4.com.au/)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
