@@ -29,7 +29,7 @@ class WC_Variation_Restrictions_Admin {
 				$attribute_name = wc_attribute_taxonomy_name( $tax->attribute_name );
 
 				add_action( "{$attribute_name}_edit_form_fields", array( $this, 'EditAttributeTerm') );
-				add_action( "edit_{$attribute_name}", array( $this, 'SaveAttributeTerm') );
+				add_action( "edit_{$attribute_name}", array( $this, 'SaveAttributeTerm'), 10, 2 );
 			}
 		}
 
