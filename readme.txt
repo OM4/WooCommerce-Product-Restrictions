@@ -3,7 +3,7 @@
 Implement mixed dozens using WooCommerce.
 Contributors: jamescollins, OM4
 Donate link: https://om4.com.au/plugins/#donate
-Tags: woocommerce, products, mixed dozen, mixed dozens
+Tags: woocommerce, product, products, mixed dozen, mixed dozens, wine, checkout, variations
 Requires at least: 4.0
 Tested up to: 4.4
 Stable tag: 1.0
