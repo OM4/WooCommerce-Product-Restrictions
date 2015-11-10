@@ -1,7 +1,0 @@
-*** WooCommerce - Product Restrictions Changelog ***
-
-2014.11.28 - version 1.0
- * Update code to be compatible with WooCommerce 2.2.x.
-
-2013.01.14 - version 0.1
- * Initial Release.
