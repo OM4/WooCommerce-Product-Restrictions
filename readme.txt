@@ -6,7 +6,7 @@ Donate link: https://om4.com.au/plugins/#donate
 Tags: woocommerce, product, products, mixed dozen, mixed dozens, wine, checkout, variations
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.1
+Stable tag: 1.0-beta
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,39 +15,49 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Implement mixed dozens using WooCommerce.
 
-- Adds new "Product Groups" setting to Dashboard, WooCommerce, Settings, Products.
+- Adds new "Product Groups" settings to Dashboard, WooCommerce, Settings, Products, General.
 - Adds new "Product Groups" setting to Dashboard, Products, Attributes, Configure Terms, Edit.
+- Adds new "Product Groups" setting to Dashboard, Products, Categories, Edit.
 
 == Installation ==
 
 1. Install & activate plugin.
 
-1. Dashboard, WooCommerce, Settings, Products, Product Groups. Configure checkout message.
+1. Go to Dashboard, WooCommerce, Settings, Products, General, Product Groups. Configure checkout message that is displayed if any restrictions aren't met.
 
-1. Dashboard, Products, Attributes:
-    - Add new attribute called "Pricing"
+1. To use a store-wide product quantity restriction:
+    1. Configure the restriction using Dashboard, WooCommerce, Settings, Products, General, Product Groups.
 
-1. Dashboard, Products, Attributes, Pricing, Configure Terms:
-    - Add new "Per bottle in mixed case of 12" term
-        - Edit term and set Product Groups restriction to 12
-        - Add new "Per bottle in mixed case of 6" term
-        - Edit term and set Product Groups restriction to 12
-    - Add new "Per whole case of 6" term
-    - Add new "Per whole case of 12" term
+1. To use Per-category restrictions:
+    1. Go to Dashboard, Products, Categories.
+    1. Edit an existing product category and complete the Product Groups setting.
 
-1. Dashboard Products Add Product, and create a new product:
-    - Product Type: Variable Product
-    - Attributes: Add existing "Pricing" attribute, with "Per bottle in mixed case of 12" and "Per whole case of 12" values. Tick "Used for variations checkbox" and "Visible on the product page" checkbox.
-    - Save the Product as a draft. Re-edit the product:
-    - Variations:
-        - Add Variation button
-        - Choose "Per bottle in mixed case of 12" from dropdown box. Enter per bottle price
-        - Add Variation button
-        - Choose "Per whole case of 12" from dropdown box. Enter whole case price.
-        - Make sure "Default selections" is set to "No default Pricing".
-    - Save and publish the product.
-    - This will create a product that can be ordered in whole cases of 12, or part of a mixed dozen.
-Repeat the above steps for remaining products.
+1. To use Product Attribute/Variation restrictions:
+
+    1. Go to Dashboard, Products, Attributes.
+    1. Add a new attribute called "Pricing"
+
+    1. Dashboard, Products, Attributes, Pricing, Configure Terms:
+        - Add new "Per bottle in mixed case of 12" term
+            - Edit term and set Product Groups restriction to 12
+            - Add new "Per bottle in mixed case of 6" term
+            - Edit term and set Product Groups restriction to 12
+        - Add new "Per whole case of 6" term
+        - Add new "Per whole case of 12" term
+
+    1. Dashboard Products Add Product, and create a new product:
+        - Product Type: Variable Product
+        - Attributes: Add existing "Pricing" attribute, with "Per bottle in mixed case of 12" and "Per whole case of 12" values. Tick "Used for variations checkbox" and "Visible on the product page" checkbox.
+        - Save the Product as a draft. Re-edit the product:
+        - Variations:
+            - Add Variation button
+            - Choose "Per bottle in mixed case of 12" from dropdown box. Enter per bottle price
+            - Add Variation button
+            - Choose "Per whole case of 12" from dropdown box. Enter whole case price.
+            - Make sure "Default selections" is set to "No default Pricing".
+        - Save and publish the product.
+        - This will create a product that can be ordered in whole cases of 12, or part of a mixed dozen.
+    Repeat the above steps for remaining products.
 
 == Frequently Asked Questions ==
 
@@ -56,6 +66,11 @@ Repeat the above steps for remaining products.
 No support is currently provided.
 
 == Changelog ==
+
+= 2.0 =
+* Add support for per-category product quantity restrictions.
+* Add support for a store-wide quantity restriction.
+* On the cart page, display more than one validation message if applicable.
 
 = 1.1 =
 * Fix PHP warning
@@ -68,6 +83,9 @@ No support is currently provided.
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 2.0 =
+Adds support for site-wide and per-category product restrictions.
 
 = 1.0 =
 WooCommerce 2.4 compatibility. WordPress 4.4 compatibility.
