@@ -269,7 +269,11 @@ function init_woocommerce_product_restrictions() {
 					$restriction = $this->GetMultipleOfForCategory( $category->term_id );
 					if ( $restriction ) {
 						if ( isset($this->product_category_quantities[$restriction]) ) {
-							$this->product_category_quantities[$restriction]['qty'] += $cart_item['quantity'];
+							// This product could be assigned to multiple categories (each of which could have matching restrictions)
+							// Only count the first one
+							if ( !array_key_exists( $cart_item['product_id'], $this->product_category_quantities[$restriction]['products'] ) ) {
+								$this->product_category_quantities[$restriction]['qty'] += $cart_item['quantity'];
+							}
 						} else {
 							$this->product_category_quantities[$restriction]['qty'] = $cart_item['quantity'];
 						}
