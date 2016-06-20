@@ -4,11 +4,13 @@ Implement mixed dozens using WooCommerce.
 Contributors: jamescollins, OM4
 Donate link: https://om4.com.au/plugins/#donate
 Tags: woocommerce, product, products, mixed dozen, mixed dozens, wine, checkout, variations
-Requires at least: 4.0
-Tested up to: 4.4
+Requires at least: 4.4.0
+Tested up to: 4.5.2
 Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+WC requires at least: 2.5.0
+WC tested up to: 2.6.0
 
 
 == Description ==
@@ -41,7 +43,7 @@ Implement mixed dozens using WooCommerce.
         - Add new "Per bottle in mixed case of 12" term
             - Edit term and set Product Groups restriction to 12
             - Add new "Per bottle in mixed case of 6" term
-            - Edit term and set Product Groups restriction to 12
+            - Edit term and set Product Groups restriction to 6
         - Add new "Per whole case of 6" term
         - Add new "Per whole case of 12" term
 
@@ -66,6 +68,9 @@ Implement mixed dozens using WooCommerce.
 No support is currently provided.
 
 == Changelog ==
+
+= 2.1 =
+* WooCommerce 2.5 and 2.6 compatibility.
 
 = 2.0 =
 * Add support for per-category product quantity restrictions.

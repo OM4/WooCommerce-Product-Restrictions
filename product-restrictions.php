@@ -3,7 +3,7 @@
 Plugin Name: WooCommerce Product Restrictions
 Plugin URI: https://github.com/OM4/woocommerce-product-restrictions/
 Description: Implement mixed dozens using WooCommerce.
-Version: 2.0
+Version: 2.1
 Author: OM4
 Author URI: https://om4.com.au/plugins/
 Git URI: https://github.com/OM4/woocommerce-product-restrictions
@@ -11,7 +11,7 @@ Git Branch: release
 */
 
 /*
-Copyright 2012-2015 OM4 (email: info@om4.com.au    web: https://om4.com.au/)
+Copyright 2012-2016 OM4 (email: plugins@om4.com.au    web: https://om4.com.au/plugins/)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -98,28 +98,54 @@ function init_woocommerce_product_restrictions() {
 				return;
 			}
 
-			global $wpdb;
-
 			// Attribute/Variation Restrictions
-			$restrictions = $wpdb->get_results( "SELECT * FROM {$wpdb->woocommerce_termmeta} WHERE meta_key='multiple_of'" );
+			$attribute_taxonomies = wc_get_attribute_taxonomies();
+			$taxonomies = array();
+			foreach ( $attribute_taxonomies as $taxonomy ) {
+				$taxonomies[] = wc_attribute_taxonomy_name( $taxonomy->attribute_name );
+			}
+			$restrictions = get_terms(
+					array(
+						'taxonomy' => $taxonomies,
+						'meta_query' => array(
+						    array(
+						     'key' => 'multiple_of',
+						     'compare' => 'EXISTS'
+						    ),
+						),
+						'hide_empty' => false
+					)
+			);
 
 			if ( is_array( $restrictions ) ) {
 				foreach ( $restrictions as $restriction ) {
-					$this->multiple_ofs_attributes[$restriction->woocommerce_term_id] = intval( $restriction->meta_value );
-					if ( !$this->multiple_ofs_attributes[$restriction->woocommerce_term_id] ) {
-						unset($this->multiple_ofs_attributes[$restriction->woocommerce_term_id]);
+					$this->multiple_ofs_attributes[$restriction->term_id] = $this->GetMultipleOfForAttribute( $restriction->term_id );
+					if ( !$this->multiple_ofs_attributes[$restriction->term_id] ) {
+						unset($this->multiple_ofs_attributes[$restriction->term_id]);
 					}
 				}
 			}
 
+
 			// Category Restrictions
-			$restrictions = $wpdb->get_results( "SELECT * FROM {$wpdb->woocommerce_termmeta} WHERE meta_key='cat_multiple_of'" );
+			$restrictions = get_terms(
+					array(
+						'taxonomy' => 'product_cat',
+						'meta_query' => array(
+								array(
+								 'key' => 'cat_multiple_of',
+								 'compare' => 'EXISTS'
+								),
+						),
+						'hide_empty' => false
+					)
+			);
 
 			if ( is_array( $restrictions ) ) {
 				foreach ( $restrictions as $restriction ) {
-					$this->multiple_ofs_categories[$restriction->woocommerce_term_id] = intval( $restriction->meta_value );
-					if ( !$this->multiple_ofs_categories[$restriction->woocommerce_term_id] ) {
-						unset($this->multiple_ofs_categories[$restriction->woocommerce_term_id]);
+					$this->multiple_ofs_categories[$restriction->term_id] = $this->GetMultipleOfForCategory( $restriction->term_id );
+					if ( !$this->multiple_ofs_categories[$restriction->term_id] ) {
+						unset($this->multiple_ofs_categories[$restriction->term_id]);
 					}
 				}
 			}
@@ -138,9 +164,8 @@ function init_woocommerce_product_restrictions() {
 		 * @return int|null
 		 */
 		public function GetMultipleOfForAttribute( $term_id ) {
-			global $wpdb;
 
-			$multiple = intval( $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$wpdb->woocommerce_termmeta} WHERE woocommerce_term_id=%d AND meta_key='multiple_of'", $term_id ) ) );
+			$multiple = intval( get_term_meta( $term_id, 'multiple_of', true ) );
 
 			return $multiple > 0 ? $multiple : null;
 		}
@@ -153,7 +178,7 @@ function init_woocommerce_product_restrictions() {
 		 * @return bool|int The multiple of setting, or false.
 		 */
 		public function GetMultipleOfForCategory( $category_id ) {
-			$restriction = get_woocommerce_term_meta( $category_id, 'cat_multiple_of', true );
+			$restriction = get_term_meta( $category_id, 'cat_multiple_of', true );
 
 			if ( false == $restriction ) {
 				return false;
@@ -180,27 +205,27 @@ function init_woocommerce_product_restrictions() {
 		 * @param int|null $multiple_of For no restriction, specify null.
 		 */
 		public function SetMultipleOfForAttributeTerm( $term_id, $multiple_of ) {
-			global $wpdb;
 
 			$term_id = absint($term_id);
 
 			if ( is_null($multiple_of) ) {
-				$wpdb->delete( $wpdb->woocommerce_termmeta, array( 'meta_key' => 'multiple_of', 'woocommerce_term_id' => $term_id ) );
+				delete_term_meta( $term_id, 'multiple_of' );
 			} else {
 				$multiple_of = intval($multiple_of);
-				$result = $wpdb->update( $wpdb->woocommerce_termmeta, array( 'meta_value' => $multiple_of	), array( 'woocommerce_term_id' => $term_id, 'meta_key' => 'multiple_of' ) );
-				if ( !$result ) {
-					$wpdb->insert( $wpdb->woocommerce_termmeta, array( 'meta_key' => 'multiple_of', 'meta_value' => $multiple_of, 'woocommerce_term_id' => $term_id ) );
-				}
+
+				$existing_value = get_term_meta( $term_id, 'multiple_of', true );
+
+				update_term_meta( $term_id, 'multiple_of', $multiple_of, $existing_value );
+
 			}
 		}
 
 		public function SetMultipleOfForCategory( $category_id, $multiple_of ) {
 			$multiple_of = intval( $multiple_of );
 			if ( $multiple_of ) {
-				update_woocommerce_term_meta( $category_id, 'cat_multiple_of', $multiple_of );
+				update_term_meta( $category_id, 'cat_multiple_of', $multiple_of );
 			} else {
-				delete_woocommerce_term_meta( $category_id, 'cat_multiple_of' );
+				delete_term_meta( $category_id, 'cat_multiple_of' );
 			}
 		}
 
@@ -300,7 +325,6 @@ function init_woocommerce_product_restrictions() {
 
 					foreach ( array_keys( $data['products'] ) as $product_id ) {
 
-						// get_product() exists in WooCommerce 2.0+ only
 						$product = wc_get_product( $product_id );
 
 						$product_name   = '';
