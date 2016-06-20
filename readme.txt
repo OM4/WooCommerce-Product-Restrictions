@@ -6,7 +6,7 @@ Donate link: https://om4.com.au/plugins/#donate
 Tags: woocommerce, product, products, mixed dozen, mixed dozens, wine, checkout, variations
 Requires at least: 4.4.0
 Tested up to: 4.5.2
-Stable tag: 2.0
+Stable tag: 2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 2.5.0
