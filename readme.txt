@@ -4,13 +4,13 @@ Implement mixed dozens using WooCommerce.
 Contributors: jamescollins, OM4
 Donate link: https://om4.com.au/plugins/#donate
 Tags: woocommerce, product, products, mixed dozen, mixed dozens, wine, checkout, variations
-Requires at least: 4.4.0
-Tested up to: 4.5.2
-Stable tag: 2.1
+Requires at least: 4.5
+Tested up to: 4.8
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-WC requires at least: 2.5.0
-WC tested up to: 2.6.0
+WC requires at least: 2.6.0
+WC tested up to: 3.1.2
 
 
 == Description ==
@@ -68,6 +68,9 @@ Implement mixed dozens using WooCommerce.
 No support is currently provided.
 
 == Changelog ==
+
+= 2.2 =
+* WooCommerce 3.0 and 3.1 compatibility.
 
 = 2.1 =
 * WooCommerce 2.5 and 2.6 compatibility.

@@ -3,15 +3,17 @@
 Plugin Name: WooCommerce Product Restrictions
 Plugin URI: https://github.com/OM4/woocommerce-product-restrictions/
 Description: Implement mixed dozens using WooCommerce.
-Version: 2.1
+Version: 2.2
 Author: OM4
 Author URI: https://om4.com.au/plugins/
 Git URI: https://github.com/OM4/woocommerce-product-restrictions
 Git Branch: release
+WC requires at least: 2.6.0
+WC tested up to: 3.1.2
 */
 
 /*
-Copyright 2012-2016 OM4 (email: plugins@om4.com.au    web: https://om4.com.au/plugins/)
+Copyright 2012-2017 OM4 (email: plugins@om4.com.au    web: https://om4.com.au/plugins/)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +30,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-load_plugin_textdomain( 'woocommerce-product-restrictions', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
+//load_plugin_textdomain( 'woocommerce-product-restrictions', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) );
 
 function init_woocommerce_product_restrictions() {
 
@@ -37,8 +39,6 @@ function init_woocommerce_product_restrictions() {
 	}
 
 	class WC_Product_Restrictions {
-
-		private $version = '2.0';
 
 		private $db_version = '1';
 
