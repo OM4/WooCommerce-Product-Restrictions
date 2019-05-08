@@ -80,7 +80,7 @@ function init_woocommerce_product_restrictions() {
 
 			if ( is_admin() ) {
 				require_once( 'includes/WC_Product_Restrictions_Admin.php' );
-				$this->admin = new WC_Product_Restrictions_Admin( );
+				$this->admin = new WC_Product_Restrictions_Admin();
 			}
 
 			add_action( 'woocommerce_check_cart_items', array( $this, 'CheckCart' ) );
@@ -100,57 +100,56 @@ function init_woocommerce_product_restrictions() {
 
 			// Attribute/Variation Restrictions
 			$attribute_taxonomies = wc_get_attribute_taxonomies();
-			$taxonomies = array();
+			$taxonomies           = array();
 			foreach ( $attribute_taxonomies as $taxonomy ) {
 				$taxonomies[] = wc_attribute_taxonomy_name( $taxonomy->attribute_name );
 			}
 			$restrictions = get_terms(
-					array(
-						'taxonomy' => $taxonomies,
-						'meta_query' => array(
-						    array(
-						     'key' => 'multiple_of',
-						     'compare' => 'EXISTS'
-						    ),
+				array(
+					'taxonomy'   => $taxonomies,
+					'meta_query' => array(
+						array(
+							'key'     => 'multiple_of',
+							'compare' => 'EXISTS',
 						),
-						'hide_empty' => false
-					)
+					),
+					'hide_empty' => false,
+				)
 			);
 
 			if ( is_array( $restrictions ) ) {
 				foreach ( $restrictions as $restriction ) {
-					$this->multiple_ofs_attributes[$restriction->term_id] = $this->GetMultipleOfForAttribute( $restriction->term_id );
-					if ( !$this->multiple_ofs_attributes[$restriction->term_id] ) {
-						unset($this->multiple_ofs_attributes[$restriction->term_id]);
+					$this->multiple_ofs_attributes[ $restriction->term_id ] = $this->GetMultipleOfForAttribute( $restriction->term_id );
+					if ( ! $this->multiple_ofs_attributes[ $restriction->term_id ] ) {
+						unset( $this->multiple_ofs_attributes[ $restriction->term_id ] );
 					}
 				}
 			}
-
 
 			// Category Restrictions
 			$restrictions = get_terms(
-					array(
-						'taxonomy' => 'product_cat',
-						'meta_query' => array(
-								array(
-								 'key' => 'cat_multiple_of',
-								 'compare' => 'EXISTS'
-								),
+				array(
+					'taxonomy'   => 'product_cat',
+					'meta_query' => array(
+						array(
+							'key'     => 'cat_multiple_of',
+							'compare' => 'EXISTS',
 						),
-						'hide_empty' => false
-					)
+					),
+					'hide_empty' => false,
+				)
 			);
 
 			if ( is_array( $restrictions ) ) {
 				foreach ( $restrictions as $restriction ) {
-					$this->multiple_ofs_categories[$restriction->term_id] = $this->GetMultipleOfForCategory( $restriction->term_id );
-					if ( !$this->multiple_ofs_categories[$restriction->term_id] ) {
-						unset($this->multiple_ofs_categories[$restriction->term_id]);
+					$this->multiple_ofs_categories[ $restriction->term_id ] = $this->GetMultipleOfForCategory( $restriction->term_id );
+					if ( ! $this->multiple_ofs_categories[ $restriction->term_id ] ) {
+						unset( $this->multiple_ofs_categories[ $restriction->term_id ] );
 					}
 				}
 			}
 
-			$this->cart_must_be_multiple_of = intval ( get_option( 'woocommerce_cart_multiple_of', 0 ) );
+			$this->cart_must_be_multiple_of = intval( get_option( 'woocommerce_cart_multiple_of', 0 ) );
 
 			$this->restrictions_loaded = true;
 
@@ -197,7 +196,6 @@ function init_woocommerce_product_restrictions() {
 			return $this->cart_must_be_multiple_of;
 		}
 
-
 		/**
 		 * Set the "multiple of" setting for the specified attribute term.
 		 *
@@ -206,12 +204,12 @@ function init_woocommerce_product_restrictions() {
 		 */
 		public function SetMultipleOfForAttributeTerm( $term_id, $multiple_of ) {
 
-			$term_id = absint($term_id);
+			$term_id = absint( $term_id );
 
-			if ( is_null($multiple_of) ) {
+			if ( is_null( $multiple_of ) ) {
 				delete_term_meta( $term_id, 'multiple_of' );
 			} else {
-				$multiple_of = intval($multiple_of);
+				$multiple_of = intval( $multiple_of );
 
 				$existing_value = get_term_meta( $term_id, 'multiple_of', true );
 
@@ -237,7 +235,6 @@ function init_woocommerce_product_restrictions() {
 		public function GetMultipleOfMessage() {
 			return get_option( 'woocommerce_multiple_of_message', $this->default_message );
 		}
-
 
 		/**
 		 * Check the customer's cart, and notify them if their cart contents don't match the restrictions.
@@ -267,21 +264,24 @@ function init_woocommerce_product_restrictions() {
 			foreach ( WC()->cart->get_cart() as $cart_item_id => $cart_item ) {
 
 				// Product Attribute/Variation restrictions
-				if ( isset($cart_item['data']) && $cart_item['data'] instanceof WC_Product_Variation && is_array( $cart_item['variation'] ) ) {
+				if ( isset( $cart_item['data'] ) && $cart_item['data'] instanceof WC_Product_Variation && is_array( $cart_item['variation'] ) ) {
 
 					foreach ( $cart_item['variation'] as $variation_name => $variation_value ) {
-						if ( !$variation_value ) continue;
+						if ( ! $variation_value ) {
+							continue;
+						}
 						if ( taxonomy_exists( esc_attr( str_replace( 'attribute_', '', $variation_name ) ) ) ) {
 							$term = get_term_by( 'slug', $variation_value, esc_attr( str_replace( 'attribute_', '', $variation_name ) ) );
-							if ( !$term )
+							if ( ! $term ) {
 								continue;
-							if ( isset($this->multiple_ofs_attributes[$term->term_id]) ) {
-								if ( isset($this->product_variation_quantities[$term->term_id]['qty']) ) {
-									$this->product_variation_quantities[$term->term_id]['qty'] += $cart_item['quantity'];
+							}
+							if ( isset( $this->multiple_ofs_attributes[ $term->term_id ] ) ) {
+								if ( isset( $this->product_variation_quantities[ $term->term_id ]['qty'] ) ) {
+									$this->product_variation_quantities[ $term->term_id ]['qty'] += $cart_item['quantity'];
 								} else {
-									$this->product_variation_quantities[$term->term_id]['qty'] = $cart_item['quantity'];
+									$this->product_variation_quantities[ $term->term_id ]['qty'] = $cart_item['quantity'];
 								}
-								$this->product_variation_quantities[$term->term_id]['products'][$cart_item['product_id']] = true;
+								$this->product_variation_quantities[ $term->term_id ]['products'][ $cart_item['product_id'] ] = true;
 							}
 						}
 					}
@@ -293,16 +293,16 @@ function init_woocommerce_product_restrictions() {
 				foreach ( $categories as $category ) {
 					$restriction = $this->GetMultipleOfForCategory( $category->term_id );
 					if ( $restriction ) {
-						if ( isset($this->product_category_quantities[$restriction]) ) {
+						if ( isset( $this->product_category_quantities[ $restriction ] ) ) {
 							// This product could be assigned to multiple categories (each of which could have matching restrictions)
 							// Only count the first one
-							if ( !array_key_exists( $cart_item['product_id'], $this->product_category_quantities[$restriction]['products'] ) ) {
-								$this->product_category_quantities[$restriction]['qty'] += $cart_item['quantity'];
+							if ( ! array_key_exists( $cart_item['product_id'], $this->product_category_quantities[ $restriction ]['products'] ) ) {
+								$this->product_category_quantities[ $restriction ]['qty'] += $cart_item['quantity'];
 							}
 						} else {
-							$this->product_category_quantities[$restriction]['qty'] = $cart_item['quantity'];
+							$this->product_category_quantities[ $restriction ]['qty'] = $cart_item['quantity'];
 						}
-						$this->product_category_quantities[$restriction]['products'][$cart_item['product_id']] = true;
+						$this->product_category_quantities[ $restriction ]['products'][ $cart_item['product_id'] ] = true;
 					}
 				}
 			}
@@ -312,7 +312,7 @@ function init_woocommerce_product_restrictions() {
 
 				$quantity = $data['qty'];
 
-				$groupof = $this->multiple_ofs_attributes[$term_id];
+				$groupof = $this->multiple_ofs_attributes[ $term_id ];
 				$modulus = $quantity % $groupof;
 				if ( $modulus != 0 ) {
 
@@ -393,7 +393,6 @@ function init_woocommerce_product_restrictions() {
 					wc_add_notice( $message, 'error' );
 
 				}
-
 			}
 
 		}
@@ -403,8 +402,8 @@ function init_woocommerce_product_restrictions() {
 		return WC_Product_Restrictions::instance();
 	}
 
-	$GLOBALS['woocommerce_product_restrictions'] = WC_Product_Restrictions();
 
+	$GLOBALS['woocommerce_product_restrictions'] = WC_Product_Restrictions();
 
 }
 add_action( 'plugins_loaded', 'init_woocommerce_product_restrictions', 0 );
