@@ -157,17 +157,17 @@ function init_woocommerce_product_restrictions() {
 
 		/**
 		 * Mitigate deprecated warning in WC 3.3 and above
+		 * wc_get_formatted_cart_item_data() is introduced in WC 3.3
 		 *
 		 * @param array $cart_item Cart item object.
 		 * @param bool  $flat      Should the data be returned flat or in a list.
 		 * @return string
 		 */
 		private function get_cart_item_data( $cart_item, $flat = false ) {
-			global $woocommerce;
-			if ( version_compare( $woocommerce->version, 3.3, '<' ) ) {
-				return WC()->cart->get_item_data( $cart_item, $flat );
-			} else {
+			if ( function_exists( 'wc_get_formatted_cart_item_data' ) ) {
 				return wc_get_formatted_cart_item_data( $cart_item, $flat );
+			} else {
+				return WC()->cart->get_item_data( $cart_item, $flat );
 			}
 		}
 
