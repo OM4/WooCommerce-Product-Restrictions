@@ -156,6 +156,22 @@ function init_woocommerce_product_restrictions() {
 		}
 
 		/**
+		 * Mitigate deprecated warning in WC 3.3 and above
+		 * wc_get_formatted_cart_item_data() is introduced in WC 3.3
+		 *
+		 * @param array $cart_item Cart item object.
+		 * @param bool  $flat      Should the data be returned flat or in a list.
+		 * @return string
+		 */
+		private function get_cart_item_data( $cart_item, $flat = false ) {
+			if ( function_exists( 'wc_get_formatted_cart_item_data' ) ) {
+				return wc_get_formatted_cart_item_data( $cart_item, $flat );
+			} else {
+				return WC()->cart->get_item_data( $cart_item, $flat );
+			}
+		}
+
+		/**
 		 * Get the "multiple of" setting for the specified attribute term
 		 *
 		 * @param int $term_id
@@ -333,7 +349,7 @@ function init_woocommerce_product_restrictions() {
 						foreach ( WC()->cart->get_cart() as $cart_item ) {
 							if ( $cart_item['product_id'] == $product_id ) {
 								$product_name   = $product->get_title();
-								$variation_info = WC()->cart->get_item_data( $cart_item, true );
+								$variation_info = $this->get_cart_item_data( $cart_item, true );
 								break;
 							}
 						}
@@ -377,7 +393,7 @@ function init_woocommerce_product_restrictions() {
 						foreach ( WC()->cart->get_cart() as $cart_item ) {
 							if ( $cart_item['product_id'] == $product_id ) {
 								$product_name   = $product->get_title();
-								$variation_info = WC()->cart->get_item_data( $cart_item, true );
+								$variation_info = $this->get_cart_item_data( $cart_item, true );
 								break;
 							}
 						}
