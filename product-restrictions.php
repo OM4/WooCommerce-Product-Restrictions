@@ -3,13 +3,13 @@
 Plugin Name: WooCommerce Product Restrictions
 Plugin URI: https://github.com/OM4/woocommerce-product-restrictions/
 Description: Implement mixed dozens using WooCommerce.
-Version: 2.2
+Version: 2.3
 Author: OM4
 Author URI: https://om4.com.au/plugins/
 Git URI: https://github.com/OM4/woocommerce-product-restrictions
 Git Branch: release
 WC requires at least: 2.6.0
-WC tested up to: 3.1.2
+WC tested up to: 3.6.4
 */
 
 /*
