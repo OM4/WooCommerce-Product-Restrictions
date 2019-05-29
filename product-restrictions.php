@@ -56,8 +56,6 @@ function init_woocommerce_product_restrictions() {
 
 		private $cart_must_be_multiple_of = 0;
 
-		private $can_checkout = true;
-
 		private $restrictions_loaded = false;
 
 		/**
@@ -172,6 +170,18 @@ function init_woocommerce_product_restrictions() {
 		}
 
 		/**
+		 * Display notification and prevent proceed to checkout by disabling the
+		 * Cart Totals and Proceed to Checkout button on the Cart page.
+		 *
+		 * @param array $message message to display on the cart page.
+		 * @return void
+		 */
+		private function notice_and_disable_proceed( $message ) {
+			wc_add_notice( $message, 'error' );
+			remove_action( 'woocommerce_cart_collaterals', 'woocommerce_cart_totals', 10 );
+		}
+
+		/**
 		 * Get the "multiple of" setting for the specified attribute term
 		 *
 		 * @param int $term_id
@@ -273,7 +283,7 @@ function init_woocommerce_product_restrictions() {
 					$message = str_replace( '%gap%', $this->cart_must_be_multiple_of - $modulus, $message );
 					$message = str_replace( '%mod%', $this->cart_must_be_multiple_of, $message );
 					$message = str_replace( '%productlist%', '', $message );
-					wc_add_notice( $message, 'error' );
+					$this->notice_and_disable_proceed( $message );
 				}
 			}
 
@@ -362,7 +372,7 @@ function init_woocommerce_product_restrictions() {
 
 					$message = str_replace( '%productlist%', $productlist, $message );
 
-					wc_add_notice( $message, 'error' );
+					$this->notice_and_disable_proceed( $message );
 
 				}
 			}
@@ -406,7 +416,7 @@ function init_woocommerce_product_restrictions() {
 
 					$message = str_replace( '%productlist%', $productlist, $message );
 
-					wc_add_notice( $message, 'error' );
+					$this->notice_and_disable_proceed( $message );
 
 				}
 			}
