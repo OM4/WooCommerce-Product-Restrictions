@@ -15,6 +15,8 @@ WC tested up to: 3.6.4
 
 == Description ==
 
+> **This package is no longer supported or maintained.**
+
 Implement mixed dozens using WooCommerce.
 
 - Adds new "Product Groups" settings to Dashboard, WooCommerce, Settings, Products, General.
